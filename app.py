@@ -1,4 +1,4 @@
-"""Suraj's Garage — application entry point."""
+"""Suraj's Garage — application entry point (flat layout matching GitHub)."""
 from __future__ import annotations
 
 import runpy
@@ -33,7 +33,6 @@ except Exception:
 if deep_case:
     from db import session_scope, DiagnosticCase
     from sqlalchemy import select
-    matched = False
     try:
         with session_scope() as s:
             c = s.scalar(select(DiagnosticCase).where(
@@ -41,10 +40,8 @@ if deep_case:
             if c and c.vehicle.owner == username:
                 st.session_state["current_case_id"] = c.id
                 st.session_state["nav"] = "Case workspace"
-                matched = True
     except Exception:
-        matched = False
-    # Always clear the param so navigation is not hijacked on every rerun.
+        pass
     try:
         st.query_params.clear()
     except Exception:
@@ -84,17 +81,17 @@ with st.sidebar:
     st.caption(f"Signed in as **{name}**")
     auth.logout(location="sidebar", button_name="Sign out", key="logout_widget")
 
-# ---------------------------------------------------------------- routing
+# ---------------------------------------------------------------- routing  (FLAT layout)
 ROUTES = {
-    "Dashboard":       "views/dashboard.py",
-    "Vehicles":        "views/vehicles.py",
-    "Vehicle detail":  "views/vehicle_detail.py",
-    "Cases":           "views/cases.py",
-    "Case workspace":  "views/case_workspace.py",
-    "Case library":    "views/case_library.py",
-    "Report builder":  "views/report_builder.py",
-    "Search":          "views/search.py",
-    "Settings":        "views/settings.py",
+    "Dashboard":       "dashboard.py",
+    "Vehicles":        "vehicles.py",
+    "Vehicle detail":  "vehicle_detail.py",
+    "Cases":           "cases.py",
+    "Case workspace":  "case_workspace.py",
+    "Case library":    "case_library.py",
+    "Report builder":  "report_builder.py",
+    "Search":          "search.py",
+    "Settings":        "settings.py",
 }
 
-runpy.run_path(ROUTES.get(nav, "views/dashboard.py"), run_name="__page__")
+runpy.run_path(ROUTES.get(nav, "dashboard.py"), run_name="__page__")
